@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace("_", "-", app()->getLocale()) }}">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{{ config("app.name", "Laravel") }} - @yield("title")</title>
+
+    @fonts
+
+    <!-- Styles / Scripts -->
+    @if (file_exists(public_path("build/manifest.json")) || file_exists(public_path("hot")))
+        @vite(["resources/css/app.css", "resources/js/app.js"])
+    @endif
+</head>
+
+<body>
+
+    <header class="bg-purple-950 py-5">
+        <div class="mx-auto flex max-w-6xl flex-col items-center lg:flex-row lg:justify-between">
+            <div class="max-w-100 w-full">
+                <img src="{{ asset("img/logo.svg") }}" alt="Logo" class="w-full">
+            </div>
+
+
+            <nav class="flex flex-col items-center gap-4 lg:flex-row">
+
+                @auth
+                    <p class="text-white text-xl"> Hola: {{ auth()->user()->name }}</p>
+                @else
+                    @if (Route::has("login"))
+                        <a href="{{ route("login") }}" class="p-2 font-bold uppercase text-white">
+                            Iniciar Sesión
+                        </a>
+                        <a href="{{ route("register") }}"
+                            class="border-2 border-amber-500 px-5 py-2 font-bold uppercase text-amber-500">Crear cuenta</a>
+                    @endif
+                @endauth
+            </nav>
+        </div>
+
+    </header>
+
+    @yield("contents")
+</body>
+
+</html>
