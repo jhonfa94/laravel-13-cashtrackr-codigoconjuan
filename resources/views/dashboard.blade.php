@@ -13,7 +13,7 @@
             <p class="mt-2 text-xl text-gray-500">Administra tus Presupuestos en esta sección</p>
         </div>
         <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-            <a href=""
+            <a href="{{ route('budgets.create') }}"
                 class="block w-full cursor-pointer rounded-lg bg-amber-500 px-5 py-3 text-center text-xl font-bold text-white">Nuevo
                 Presupuesto</a>
         </div>
