@@ -61,6 +61,15 @@
                                     </td>
                                     <td class="flex justify-end gap-3 px-10 py-6">
                                         <x-budget-drowpdown :budget="$budget" />
+
+
+                                        <x-confirm-delete
+                                            :id="'delete-dialog-' . $budget->id"
+                                            :title="'Eliminar Presupuesto: ' . $budget->name"
+                                            message="'¿Estás seguro de que quieres eliminar este presupuesto?'"
+                                            :action="route('budgets.destroy', $budget)"
+                                        />
+
                                     </td>
                                 </tr>
                             @endforeach

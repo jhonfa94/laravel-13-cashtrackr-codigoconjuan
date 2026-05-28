@@ -48,4 +48,5 @@ Route::prefix('dashboard')
 
     Route::get('budgets/{budget}/edit', [BudgetController::class, 'edit'])->name("budgets.edit");
     Route::put('budgets/{budget}', [BudgetController::class, 'update'])->name("budgets.update");
+    Route::delete('budgets/{budget}', [BudgetController::class, 'destroy'])->name("budgets.destroy");
     });

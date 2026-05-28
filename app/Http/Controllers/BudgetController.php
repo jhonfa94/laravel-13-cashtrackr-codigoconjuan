@@ -80,14 +80,14 @@ class BudgetController extends Controller
 
         // $budget->update($data);
 
-        return redirect()->route('dashboard')->with('success', 'Presupuesto actualizado exitosamente');
+        return redirect()->route('dashboard')->with('success', 'Presupuesto actualizado correctamente');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    #[Authorize('delete', 'budget')]
     public function destroy(Budget $budget)
     {
         //
+        $budget->delete();
+        return redirect()->route('dashboard')->with('success', 'Presupuesto eliminado correctamente');
     }
 }
