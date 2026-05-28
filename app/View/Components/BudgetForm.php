@@ -4,16 +4,20 @@ namespace App\View\Components;
 
 use Closure;
 use Illuminate\Contracts\View\View;
+use App\Models\Budget;
 use Illuminate\View\Component;
 
 class BudgetForm extends Component
 {
+
+    public ?Budget $budget;
+
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct(Budget $budget = null)
     {
-        //
+        $this->budget = $budget;
     }
 
     /**

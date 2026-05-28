@@ -60,7 +60,7 @@
                                         <p class="text-lg text-gray-500">${{ $budget->amount }}</p>
                                     </td>
                                     <td class="flex justify-end gap-3 px-10 py-6">
-                                        <x-budget-drowpdown />
+                                        <x-budget-drowpdown :budget="$budget" />
                                     </td>
                                 </tr>
                             @endforeach

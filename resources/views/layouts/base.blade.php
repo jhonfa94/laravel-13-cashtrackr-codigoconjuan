@@ -45,6 +45,18 @@
 
     </header>
 
+        @if (session('success'))
+        <div class="max-w-5xl mx-auto" >
+            <x-alert type="success" :message="session('success')" />
+        </div>
+        @endif
+        
+        @if (session('error'))
+        <div class="max-w-5xl mx-auto" >
+            <x-alert type="error" :message="session('error')" />
+        </div>
+        @endif
+
     @yield("contents")
 </body>
 
