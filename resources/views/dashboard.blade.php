@@ -56,7 +56,7 @@
                                             ">
                                             {{ $budget->isGeneral() ? 'General' : 'Proyecto' }}
                                         </p>
-                                        <a class="block text-2xl font-bold text-gray-500" href="">{{ $budget->name }}</a>
+                                        <a class="block text-2xl font-bold text-gray-500" href="{{ route('budgets.show', $budget) }}">{{ $budget->name }}</a>
                                         <p class="text-lg text-gray-500">${{ $budget->amount }}</p>
                                     </td>
                                     <td class="flex justify-end gap-3 px-10 py-6">

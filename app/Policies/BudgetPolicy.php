@@ -11,6 +11,11 @@ class BudgetPolicy
     /**
      * Determine whether the user can update the model.
      */
+    public function view(User $user, Budget $budget): Response
+    {
+        return $user->id === $budget->user_id ? Response::allow() : Response::deny("No tienes permiso para ver este presupuesto");
+    }
+
     public function update(User $user, Budget $budget): Response
     {
         return $user->id === $budget->user_id ? Response::allow() : Response::deny("No tienes permiso para editar este presupuesto");

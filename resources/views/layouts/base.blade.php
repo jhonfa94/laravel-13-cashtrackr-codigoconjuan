@@ -7,6 +7,8 @@
 
     <title>{{ config("app.name", "Laravel") }} - @yield("title")</title>
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     @fonts
 
     <!-- Styles / Scripts -->
@@ -50,7 +52,7 @@
             <x-alert type="success" :message="session('success')" />
         </div>
         @endif
-        
+
         @if (session('error'))
         <div class="max-w-5xl mx-auto" >
             <x-alert type="error" :message="session('error')" />
