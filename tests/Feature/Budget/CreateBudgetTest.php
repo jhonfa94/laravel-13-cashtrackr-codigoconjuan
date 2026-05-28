@@ -165,6 +165,4 @@ it('validate type be valid', function () {
     $this->assertDatabaseHas('budgets', [
         'type' => 'general',
     ]);
-
-
 });
