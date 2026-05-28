@@ -1,6 +1,8 @@
 import { Head } from "@inertiajs/react";
 import { Budget } from "@/types/budget";
 import AmountDisplay from "@/Components/AmountDisplay";
+import ExpenseModal from "@/Components/ExpenseModal";
+import { useExpenseModalStore } from "@/stores/expense-modal-store";
 
 
 
@@ -15,6 +17,8 @@ export default function Show({ budget }: Props) {
     // console.log(budget.id)
     // console.log(budget.name)
     // console.log(budget.type)
+
+    const openModal = useExpenseModalStore(state => state.openModal)
 
     return (
         <>
@@ -40,6 +44,17 @@ export default function Show({ budget }: Props) {
 
                 </div>
             </main>
+
+            <section className="p-10 lg:px-5 shadow-lg mt-10">
+                <div className="flex justify-between items-center">
+                    <h2 className="text-3xl font-black">Gastos</h2>
+                    <button className="bg-purple-950 hover:bg-purple-800 px-5 py-2 my-5 rounded-lg text-white font-bold text-xl cursor-pointer"
+                    onClick={openModal}
+                    >Nuevo Gasto</button>
+                </div>
+            </section>
+
+            <ExpenseModal/>
         </>
     )
 }
