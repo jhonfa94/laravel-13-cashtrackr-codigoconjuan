@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enum\ExpenseCategory;
 use App\Http\Requests\BudgetRequest;
 use App\Models\Budget;
 use Illuminate\Http\Request;
@@ -60,8 +61,17 @@ class BudgetController extends Controller
     #[Authorize('view', 'budget')]
     public function show(Budget $budget)
     {
+
+        $categories = collect(ExpenseCategory::cases())->map(fn($category) => [
+            'value' => $category->value,
+            'label' => $category->label(),
+        ]);
+        // dd($categories);
+
+
         return Inertia::render('Budgets/Show', [
             'budget' => $budget,
+            'categories' => $categories
         ]);
     }
 

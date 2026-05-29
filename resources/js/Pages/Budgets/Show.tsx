@@ -1,17 +1,23 @@
-import { Head } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
+import { ToastContainer, toast } from "react-toastify";
 import { Budget } from "@/types/budget";
 import AmountDisplay from "@/Components/AmountDisplay";
 import ExpenseModal from "@/Components/ExpenseModal";
 import { useExpenseModalStore } from "@/stores/expense-modal-store";
+import { Category } from "@/types/category";
+import { useEffect } from "react";
 
 
 
 type Props = {
     budget: Budget;
+    categories: Category[];
 }
 
 
-export default function Show({ budget }: Props) {
+export default function Show({ budget, categories }: Props) {
+
+    const { flash } = usePage().props;
 
     // const { name, amount } = budget;
     // console.log(budget.id)
@@ -19,6 +25,20 @@ export default function Show({ budget }: Props) {
     // console.log(budget.type)
 
     const openModal = useExpenseModalStore(state => state.openModal)
+    useExpenseModalStore.getState().setBudget(budget);
+    useExpenseModalStore.getState().setCategories(categories);
+
+    // console.log("categories: ", categories)
+
+    useEffect(() => {
+        if (flash.success) {
+            toast.success(flash.success);
+        }
+
+        if (flash.error) {
+            toast.error(flash.error);
+        }
+    }, [flash]);
 
     return (
         <>
@@ -54,7 +74,20 @@ export default function Show({ budget }: Props) {
                 </div>
             </section>
 
-            <ExpenseModal/>
+            <ExpenseModal />
+
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+            />
         </>
     )
 }

@@ -1,21 +1,43 @@
-import {create} from 'zustand'
+import { Budget } from "@/types/budget";
+import { Category } from "@/types/category";
+import { create } from "zustand";
 
 type ExpenseModalStore = {
     open: boolean;
+    budget: Budget | null;
+    categories: Category[];
     openModal: () => void;
     closeModal: () => void;
-}
+    setBudget: (budget: Budget) => void;
+    setCategories: (categories: Category[]) => void;
+};
 
 export const useExpenseModalStore = create<ExpenseModalStore>((set) => ({
     open: false,
+    budget: null,
+    categories: [],
+
     openModal: () => {
         set({
-            open:true
-        })
+            open: true,
+        });
     },
+
     closeModal: () => {
         set({
-            open:false
-        })
+            open: false,
+        });
     },
-}))
+
+    setBudget: (budget) => {
+        set({
+            budget,
+        });
+    },
+
+    setCategories: (categories) => {
+        set({
+            categories,
+        });
+    },
+}));
