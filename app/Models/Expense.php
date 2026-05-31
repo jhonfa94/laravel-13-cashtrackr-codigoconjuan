@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enum\ExpenseCategory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,25 @@ class Expense extends Model
     use HasFactory;
     use SoftDeletes;
 
-     public function budget(){
+   protected $casts = [
+      'category' => ExpenseCategory::class
+   ];
+
+   protected $appends = ['category_label', 'category_color'];
+
+   public function getCategoryLabelAttribute()
+   {
+      // return ExpenseCategory::from($this->category)->label();
+      return $this->category->label();
+   }
+
+   public function getCategoryColorAttribute()
+   {
+      return $this->category->color();
+   }
+
+   public function budget()
+   {
         return $this->belongsTo(Budget::class);
      }
 }

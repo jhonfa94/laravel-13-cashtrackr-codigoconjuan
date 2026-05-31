@@ -44,7 +44,7 @@ class ExpenseRequest extends FormRequest
             'category' => Rule::when(
                 $budget->isGeneral(),
                 ['required',new Enum(ExpenseCategory::class)],
-                ['nullable']
+                ['exclude']
             )
         ];
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enum\ExpenseCategory;
 use App\Http\Requests\BudgetRequest;
 use App\Models\Budget;
+use App\Models\Expense;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
@@ -61,6 +62,16 @@ class BudgetController extends Controller
     #[Authorize('view', 'budget')]
     public function show(Budget $budget)
     {
+
+        // $expenses = Expense::where('budget_id', '=',  $budget->id)->get();
+        // $expenses = $budget->expenses()->latest()->get();
+        $budget->load([
+            'expenses' => fn($query) => $query->latest()
+        ]);
+
+        $total = $budget->expenses->sum('amount');
+
+        // dd($total);
 
         $categories = collect(ExpenseCategory::cases())->map(fn($category) => [
             'value' => $category->value,
