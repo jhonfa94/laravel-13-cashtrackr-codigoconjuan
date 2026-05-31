@@ -6,6 +6,8 @@ use App\Http\Requests\ExpenseRequest;
 use App\Models\Budget;
 use App\Models\Expense;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
+use Illuminate\Support\Facades\Gate;
 
 class ExpenseController extends Controller
 {
@@ -15,6 +17,9 @@ class ExpenseController extends Controller
      */
     public function store(ExpenseRequest $request, Budget $budget)
     {
+
+        Gate::authorize('create', [Expense::class, $budget]);
+
         // forma tradicional
         // $data = $request->validated();
         // Expense::create([
@@ -32,9 +37,7 @@ class ExpenseController extends Controller
     }
 
 
-    /**
-     * Update the specified resource in storage.
-     */
+    #[Authorize('update', 'expense')]
     public function update(ExpenseRequest $request, Budget $budget, Expense $expense)
     {
         //
@@ -45,13 +48,12 @@ class ExpenseController extends Controller
             ->with('success', 'Gasto actualizado exitosamente');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    #[Authorize('delete', 'expense')]
     public function destroy(Budget $budget, Expense $expense)
     {
         //
-        $expense->delete();
+        // $expense->delete();
+        Expense::delete($expense->id);
 
         return redirect()
             ->route('budgets.show', $expense->budget_id)

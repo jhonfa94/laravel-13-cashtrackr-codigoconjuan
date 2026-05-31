@@ -41,8 +41,7 @@ export default function Show({ budget, categories, spent }: Props) {
     // console.log(budget.type)
 
     const openModal = useExpenseModalStore(state => state.openModal)
-    useExpenseModalStore.getState().setBudget(budget);
-    useExpenseModalStore.getState().setCategories(categories);
+
 
     // console.log("categories: ", categories)
 
@@ -58,6 +57,11 @@ export default function Show({ budget, categories, spent }: Props) {
 
         return () => clearTimeout(timeout);
     });
+
+    useEffect(() => {
+        useExpenseModalStore.getState().setBudget(budget);
+        useExpenseModalStore.getState().setCategories(categories);
+    }, [budget, categories])
 
 
 

@@ -27,7 +27,7 @@ it('allows the owner to update a budget', function () {
         'type' => 'general',
     ]);
 
-    $response->assertRedirect(route('dashboard'));
+    $response->assertRedirect(route('budgets.show', $budget));
     $response->assertSessionHas('success', 'Presupuesto actualizado correctamente');
 
     $this->assertAuthenticatedAs($user);

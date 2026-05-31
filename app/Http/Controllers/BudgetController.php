@@ -56,7 +56,8 @@ class BudgetController extends Controller
         // forma recomendada
         $budget = Auth::user()->budgets()->create($data);
 
-        return redirect()->route('dashboard')->with('success', 'Presupuesto creado correctamente');
+        // return redirect()->route('dashboard')->with('success', 'Presupuesto creado correctamente');
+        return redirect()->route('budgets.show', $budget->id)->with('success', 'Presupuesto creado correctamente');
     }
 
     #[Authorize('view', 'budget')]
@@ -103,14 +104,16 @@ class BudgetController extends Controller
 
         // $budget->update($data);
 
-        return redirect()->route('dashboard')->with('success', 'Presupuesto actualizado correctamente');
+        return redirect()->route('budgets.show', $budget->id)->with('success', 'Presupuesto actualizado correctamente');
     }
 
     #[Authorize('delete', 'budget')]
     public function destroy(Budget $budget)
     {
         //
-        $budget->delete();
+        // $budget->delete();
+        Budget::delete($budget->id);
+
         return redirect()->route('dashboard')->with('success', 'Presupuesto eliminado correctamente');
     }
 }
