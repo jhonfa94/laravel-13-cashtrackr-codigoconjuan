@@ -35,16 +35,26 @@ class ExpenseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ExpenseRequest $request, Expense $expense)
+    public function update(ExpenseRequest $request, Budget $budget, Expense $expense)
     {
         //
+        $expense->update($request->validated());
+
+        return redirect()
+            ->route('budgets.show', $budget->id)
+            ->with('success', 'Gasto actualizado exitosamente');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Expense $expense)
+    public function destroy(Budget $budget, Expense $expense)
     {
         //
+        $expense->delete();
+
+        return redirect()
+            ->route('budgets.show', $expense->budget_id)
+            ->with('success', 'Gasto eliminado exitosamente');
     }
 }

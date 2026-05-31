@@ -8,6 +8,8 @@ import { Category } from "@/types/category";
 import { useEffect, useState } from "react";
 import { formatDate } from "@/utils/intex";
 import ProgressBar from "@/Components/ProgressBar";
+import ExpenseDropdown from "@/Components/ExpenseDropdown";
+import DeleteExpenseModal from "@/Components/DeleteExpenseModal";
 
 
 
@@ -124,8 +126,8 @@ export default function Show({ budget, categories, spent }: Props) {
                                                     <p className="text-lg text-gray-500">${expense.amount}</p>
                                                     <p className='text-sm text-gray-400'>Agregado el: {formatDate(expense.created_at)}</p>
                                                 </td>
-                                                <td className="py-6 px-10 flex justify-end gap-3">
-
+                                                <td className="py-6 px-10 flex justify-end gap-3 ">
+                                                    <ExpenseDropdown expense={expense} categories={categories} />
                                                 </td>
                                             </tr>
                                         ))}
@@ -147,6 +149,8 @@ export default function Show({ budget, categories, spent }: Props) {
             </section>
 
             <ExpenseModal />
+
+            <DeleteExpenseModal />
 
             <ToastContainer
                 position="top-right"
