@@ -69,7 +69,7 @@ class BudgetController extends Controller
             'expenses' => fn($query) => $query->latest()
         ]);
 
-        $total = $budget->expenses->sum('amount');
+        $spent = $budget->expenses->sum('amount');
 
         // dd($total);
 
@@ -82,6 +82,7 @@ class BudgetController extends Controller
 
         return Inertia::render('Budgets/Show', [
             'budget' => $budget,
+            'spent' => $spent,
             'categories' => $categories
         ]);
     }

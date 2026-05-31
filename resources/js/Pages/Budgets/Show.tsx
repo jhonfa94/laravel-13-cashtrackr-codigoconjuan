@@ -5,22 +5,33 @@ import AmountDisplay from "@/Components/AmountDisplay";
 import ExpenseModal from "@/Components/ExpenseModal";
 import { useExpenseModalStore } from "@/stores/expense-modal-store";
 import { Category } from "@/types/category";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { formatDate } from "@/utils/intex";
+import ProgressBar from "@/Components/ProgressBar";
 
 
 
 type Props = {
     budget: Budget;
     categories: Category[];
+    spent: string,
 }
 
 
-export default function Show({ budget, categories }: Props) {
+export default function Show({ budget, categories, spent }: Props) {
 
     // console.log(budget.expenses)
 
     const { flash } = usePage().props;
+    useEffect(() => {
+        if (flash.success) {
+            toast.success(flash.success);
+        }
+
+        if (flash.error) {
+            toast.error(flash.error);
+        }
+    }, [flash]);
 
     // const { name, amount } = budget;
     // console.log(budget.id)
@@ -33,15 +44,23 @@ export default function Show({ budget, categories }: Props) {
 
     // console.log("categories: ", categories)
 
-    useEffect(() => {
-        if (flash.success) {
-            toast.success(flash.success);
-        }
+    const percentageUsed = +((+spent / +budget.amount) * 100).toFixed(2);
+    const remainingAmount = +budget.amount - +spent;
 
-        if (flash.error) {
-            toast.error(flash.error);
-        }
-    }, [flash]);
+    const [progress, setProgress] = useState(0);
+
+    useEffect(() => { 
+        const timeout = setTimeout(() => {
+            setProgress(percentageUsed);
+        }, 150);
+
+        return () => clearTimeout(timeout);
+    });
+
+
+
+
+
 
     return (
         <>
@@ -61,9 +80,10 @@ export default function Show({ budget, categories }: Props) {
             <main className='grid grid-cols-1 md:grid-cols-2 items-center gap-20 mt-10'>
 
                 <div className='space-y-5'>
+                    <ProgressBar percentageUsed={progress} />
                     <AmountDisplay label="Presupuestado" amount={+budget.amount} />
-                    <AmountDisplay label="Gastado" amount={0} />
-                    <AmountDisplay label="Restante" amount={0} />
+                    <AmountDisplay label="Gastado" amount={+spent} />
+                    <AmountDisplay label="Restante" amount={+remainingAmount} />
                 </div>
             </main>
 
