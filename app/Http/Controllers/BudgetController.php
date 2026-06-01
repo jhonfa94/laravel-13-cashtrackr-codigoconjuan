@@ -7,9 +7,9 @@ use App\Http\Requests\BudgetRequest;
 use App\Models\Budget;
 use App\Models\Expense;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 #[Middleware('auth')]
@@ -60,9 +60,9 @@ class BudgetController extends Controller
         return redirect()->route('budgets.show', $budget->id)->with('success', 'Presupuesto creado correctamente');
     }
 
-    #[Authorize('view', 'budget')]
     public function show(Budget $budget)
     {
+        Gate::authorize('view', $budget);
 
         // $expenses = Expense::where('budget_id', '=',  $budget->id)->get();
         // $expenses = $budget->expenses()->latest()->get();
@@ -88,16 +88,16 @@ class BudgetController extends Controller
         ]);
     }
 
-    #[Authorize('update', 'budget')]
     public function edit(Budget $budget)
     {
+        Gate::authorize('update', $budget);
         //
         return view('budgets.edit', compact('budget'));
     }
 
-    #[Authorize('update', 'budget')]
     public function update(BudgetRequest $request, Budget $budget)
     {
+        Gate::authorize('update', $budget);
         //
         $budget->update($request->validated());
         // $data = $request->validated();
@@ -107,12 +107,11 @@ class BudgetController extends Controller
         return redirect()->route('budgets.show', $budget->id)->with('success', 'Presupuesto actualizado correctamente');
     }
 
-    #[Authorize('delete', 'budget')]
     public function destroy(Budget $budget)
     {
-        //
-        // $budget->delete();
-        Budget::delete($budget->id);
+        Gate::authorize('delete', $budget);
+
+        $budget->delete();
 
         return redirect()->route('dashboard')->with('success', 'Presupuesto eliminado correctamente');
     }
