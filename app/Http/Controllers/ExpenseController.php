@@ -55,8 +55,8 @@ class ExpenseController extends Controller
     public function destroy(Budget $budget, Expense $expense)
     {
         //
-        // $expense->delete();
-        Expense::delete($expense->id);
+        $expense->delete();
+        // Expense::delete($expense->id);
 
         return redirect()
             ->route('budgets.show', $expense->budget_id)
