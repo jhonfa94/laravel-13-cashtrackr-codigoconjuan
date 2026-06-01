@@ -13,7 +13,7 @@ it('allows the budget owner to create an expense in a general budget', function 
     $user = User::factory()->create([
         'email_verified_at' => now(),
     ]);
-  
+
     $budget = Budget::factory()->for($user)->create([
         'type' => 'general',
     ]);
@@ -21,27 +21,40 @@ it('allows the budget owner to create an expense in a general budget', function 
     $response = $this->actingAs($user)->post(route('expenses.store', $budget),[
         'name' => 'Dentista',
         'amount' => 300,
-        'category' => 'healt'
+        'category' => 'health'
     ]);
-   
+
+
     $response->assertRedirect(route('budgets.show', $budget));
     $response->assertSessionHas('success', 'Gasto creado correctamente');
 
     $this->assertDatabaseHas('expenses', [
         'name' => 'Dentista',
         'amount' => 300,
-        'category' => 'healt',
-        'budget_id' => $budget->id,
     ]);
-
-   
-
-    
 });
 
 it('allows the budget owner to create an expense in a goal budget without category', function () {
     $user = User::factory()->create([
         'email_verified_at' => now(),
+    ]);
+
+    $budget = Budget::factory()->for($user)->create([
+        'type' => 'goal',
+    ]);
+
+    $response = $this->actingAs($user)->post(route('expenses.store', $budget), [
+        'name' => 'Dentista',
+        'amount' => 300,
+    ]);
+
+
+    $response->assertRedirect(route('budgets.show', $budget));
+    $response->assertSessionHas('success', 'Gasto creado correctamente');
+
+    $this->assertDatabaseHas('expenses', [
+        'name' => 'Dentista',
+        'amount' => 300,
     ]);
 });
 
@@ -49,12 +62,38 @@ it('does not allow guests to create expenses', function () {
     $user = User::factory()->create([
         'email_verified_at' => now(),
     ]);
+
+    $budget = Budget::factory()->for($user)->create([
+        'type' => 'general',
+    ]);
+
+    $response = $this->post(route('expenses.store', $budget), [
+        'name' => 'Dentista',
+        'amount' => 300,
+        'category' => 'health'
+    ]);
+
+
+    $response->assertRedirect(route('login'));
 });
 
 it('does not allow unverified users to create expenses', function () {
     $user = User::factory()->create([
         'email_verified_at' => null,
     ]);
+
+    $budget = Budget::factory()->for($user)->create([
+        'type' => 'general',
+    ]);
+
+    $response = $this->actingAs($user)->post(route('expenses.store', $budget), [
+        'name' => 'Dentista',
+        'amount' => 300,
+        'category' => 'health'
+    ]);
+
+
+    $response->assertRedirect(route('verification.notice'));
 });
 
 it('does not allow other users to create expenses in someone else budget', function () {
@@ -65,11 +104,49 @@ it('does not allow other users to create expenses in someone else budget', funct
     $otherUser = User::factory()->create([
         'email_verified_at' => now(),
     ]);
+
+    $budget = Budget::factory()->for($owner)->create([
+        'type' => 'general',
+    ]);
+
+    $response = $this->actingAs($otherUser)->post(route('expenses.store', $budget), [
+        'name' => 'Dentista',
+        'amount' => 300,
+        'category' => 'health'
+    ]);
+
+    $response->assertForbidden();
+
+    $this->assertDatabaseMissing('expenses', [
+        'name' => 'Dentista',
+        'amount' => 300,
+        'category' => 'health',
+        'budget_id' => $budget->id,
+    ]);
 });
 
 it('validates required fields when creating an expense in a general budget', function () {
     $user = User::factory()->create([
         'email_verified_at' => now(),
+    ]);
+
+    $budget = Budget::factory()->for($user)->create([
+        'type' => 'general',
+    ]);
+
+    $response = $this->actingAs($user)
+        ->from(route('budgets.show', $budget))
+        ->post(route('expenses.store', $budget), [
+            'name' => '',
+            'amount' => '',
+            'category' => ''
+        ]);
+
+    $response->assertRedirect(route('budgets.show', $budget));
+    $response->assertSessionHasErrors([
+        'name',
+        'amount',
+        'category',
     ]);
 });
 
@@ -77,10 +154,45 @@ it('validates category must be valid for a general budget', function () {
     $user = User::factory()->create([
         'email_verified_at' => now(),
     ]);
+
+    $budget = Budget::factory()->for($user)->create([
+        'type' => 'general',
+    ]);
+
+    $response = $this->actingAs($user)
+        ->from(route('budgets.show', $budget))
+        ->post(route('expenses.store', $budget), [
+            'name' => 'Dentista',
+            'amount' => 100,
+            'category' => 'not_value'
+        ]);
+
+    $response->assertRedirect(route('budgets.show', $budget));
+    $response->assertSessionHasErrors('category');
 });
 
 it('does not require category for a goal budget', function () {
     $user = User::factory()->create([
         'email_verified_at' => now(),
     ]);
+
+    $budget = Budget::factory()->for($user)->create([
+        'type' => 'goal',
+    ]);
+
+    $response = $this->actingAs($user)
+        ->from(route('budgets.show', $budget))
+        ->post(route('expenses.store', $budget), [
+            'name' => '',
+            'amount' => '',
+            'category' => ''
+        ]);
+
+    $response->assertRedirect(route('budgets.show', $budget));
+    $response->assertSessionHasErrors([
+        'name',
+        'amount',
+    ]);
+
+    $response->assertSessionDoesntHaveErrors('category');
 });

@@ -7,8 +7,11 @@ use App\Models\Budget;
 use App\Models\Expense;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Facades\Gate;
 
+#[Middleware('auth')]
+#[Middleware('verified')]
 class ExpenseController extends Controller
 {
 
@@ -33,7 +36,7 @@ class ExpenseController extends Controller
 
         return redirect()
             ->route('budgets.show', $budget->id)
-            ->with('success', 'Gasto creado exitosamente');
+            ->with('success', 'Gasto creado correctamente');
     }
 
 
