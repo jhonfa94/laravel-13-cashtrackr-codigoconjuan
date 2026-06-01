@@ -6,7 +6,7 @@ use App\Http\Requests\ExpenseRequest;
 use App\Models\Budget;
 use App\Models\Expense;
 use Illuminate\Http\Request;
-
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Support\Facades\Gate;
 
 class ExpenseController extends Controller
@@ -33,14 +33,14 @@ class ExpenseController extends Controller
 
         return redirect()
             ->route('budgets.show', $budget->id)
-            ->with('success', 'Gasto creado correctamente');
+            ->with('success', 'Gasto creado exitosamente');
     }
 
 
+    #[Authorize('update', 'expense')]
     public function update(ExpenseRequest $request, Budget $budget, Expense $expense)
     {
-        Gate::authorize('update', $expense);
-
+        //
         $expense->update($request->validated());
 
         return redirect()
@@ -48,11 +48,12 @@ class ExpenseController extends Controller
             ->with('success', 'Gasto actualizado exitosamente');
     }
 
+    #[Authorize('delete', 'expense')]
     public function destroy(Budget $budget, Expense $expense)
     {
-        Gate::authorize('delete', $expense);
-
-        $expense->delete();
+        //
+        // $expense->delete();
+        Expense::delete($expense->id);
 
         return redirect()
             ->route('budgets.show', $expense->budget_id)
