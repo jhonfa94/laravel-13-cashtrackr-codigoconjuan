@@ -10,6 +10,7 @@ import { formatDate } from "@/utils/intex";
 import ProgressBar from "@/Components/ProgressBar";
 import ExpenseDropdown from "@/Components/ExpenseDropdown";
 import DeleteExpenseModal from "@/Components/DeleteExpenseModal";
+import CashTrackrAgent from "@/Components/CashTrackrAgent";
 
 
 
@@ -50,7 +51,7 @@ export default function Show({ budget, categories, spent }: Props) {
 
     const [progress, setProgress] = useState(0);
 
-    useEffect(() => { 
+    useEffect(() => {
         const timeout = setTimeout(() => {
             setProgress(percentageUsed);
         }, 150);
@@ -151,6 +152,8 @@ export default function Show({ budget, categories, spent }: Props) {
                     </p>
                 )}
             </section>
+
+            <CashTrackrAgent budgetId={budget.id} />
 
             <ExpenseModal />
 
