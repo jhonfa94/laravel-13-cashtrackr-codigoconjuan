@@ -1,20 +1,43 @@
 import { useState } from 'react';
 import { useChat } from '@ai-sdk/react'
 import { DefaultChatTransport } from 'ai';
+import { toast } from 'react-toastify';
+import { router } from '@inertiajs/react';
 
 type Props = {
-    budgetId: number
+    budgetId: number,
+    name: string,
+
 }
 
 
-export default function CashTrackrAgent({ budgetId }: Props) {
+export default function CashTrackrAgent({ budgetId, name }: Props) {
 
     const [input, setInput] = useState('');
 
     const { sendMessage, messages } = useChat({
         transport: new DefaultChatTransport({
             api: `/dashboard/budgets/${budgetId}/chat`
-        })
+        }),
+        onFinish: ({ message }) => {
+            const expenseCreated = message.parts.some(part => {
+                // if (!part.output) return null;
+                // return part.output.startsWith('[EXPENSE_CREATED]')
+
+                const isAddExpenseTool = part.type === 'tool-AddExpense';
+                const finished = 'state' in part && part.state === 'output-available';
+
+
+                return isAddExpenseTool && finished;
+            });
+
+            if (expenseCreated) {
+                toast.success('Gasto registrado correctamente');
+                router.reload();
+            }
+
+
+        }
     });
 
     console.log("Messages: ", messages);
@@ -22,7 +45,36 @@ export default function CashTrackrAgent({ budgetId }: Props) {
     return (
         <section className='p-10 lg:px-5 shadow-lg mt-10'>
             <h2 className="text-3xl font-bold">Pregunta sobre tu Presupuesto, añade gastos y más.</h2>
-            <div className="space-y-3 mb-4 mt-8"></div>
+            <div className="space-y-3 mb-4 mt-8">
+                {messages.map(m => (
+                    <div
+                        key={m.id}
+                        className={`p-3 rounded-lg max-w-[80%] lg:max-w-[60%] ${m.role === 'user'
+                            ? 'bg-amber-500 text-white ml-auto'
+                            : 'bg-gray-700 text-white mr-auto'
+                            }`}
+
+                    >
+                        {m.parts.map((part, i) => {
+                            if (part.type !== 'text') return null;
+
+                            const text = part.text
+                                .replace('[EXPENSE_CREATED]', '')
+                                .trim();
+
+                            if (!text) return null;
+
+                            return (
+                                <p className='text-xl' key={i}>
+                                    <strong>{m.role === 'user' ? name : 'CashTrackr IA: '}</strong>
+                                    {text}
+                                </p>
+                            )
+
+                        })}
+                    </div>
+                ))}
+            </div>
 
             <form
                 onSubmit={(e) => {

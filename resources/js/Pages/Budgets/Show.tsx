@@ -25,7 +25,7 @@ export default function Show({ budget, categories, spent }: Props) {
 
     // console.log(budget.expenses)
 
-    const { flash } = usePage().props;
+    const { flash, user } = usePage().props;
     useEffect(() => {
         if (flash.success) {
             toast.success(flash.success);
@@ -35,6 +35,8 @@ export default function Show({ budget, categories, spent }: Props) {
             toast.error(flash.error);
         }
     }, [flash]);
+
+    // console.log("user: ", user)
 
     // const { name, amount } = budget;
     // console.log(budget.id)
@@ -153,7 +155,7 @@ export default function Show({ budget, categories, spent }: Props) {
                 )}
             </section>
 
-            <CashTrackrAgent budgetId={budget.id} />
+            <CashTrackrAgent budgetId={budget.id} name={user.name} />
 
             <ExpenseModal />
 
