@@ -31,6 +31,7 @@
             <nav class="flex flex-col items-center gap-4 lg:flex-row">
 
                 @auth
+                    <x-subscrition-badge/>
                     <p class="text-white text-xl"> Hola: {{ auth()->user()->name }}</p>
                     <x-dropdown-menu />
                 @else

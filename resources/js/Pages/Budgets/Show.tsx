@@ -11,6 +11,7 @@ import ProgressBar from "@/Components/ProgressBar";
 import ExpenseDropdown from "@/Components/ExpenseDropdown";
 import DeleteExpenseModal from "@/Components/DeleteExpenseModal";
 import CashTrackrAgent from "@/Components/CashTrackrAgent";
+import PricingTable from "@/Components/PricingTable";
 
 
 
@@ -155,7 +156,14 @@ export default function Show({ budget, categories, spent }: Props) {
                 )}
             </section>
 
-            <CashTrackrAgent budgetId={budget.id} name={user.name} />
+            {user.subscribed ? (
+                <CashTrackrAgent budgetId={budget.id} name={user.user.name} />
+            ) : (
+                <div className="mt-10">
+                    <PricingTable />
+                </div>
+            )}
+
 
             <ExpenseModal />
 

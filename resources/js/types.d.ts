@@ -9,9 +9,9 @@ declare module '@inertiajs/core' {
                 error: string | null;
             };
             user: {
-                id: number;
-                name: string;
-                email: string;
+                user: { id: number; name: string; email: string };
+                subscribed: boolean;
+                plan: string | null;
             };
         };
     }
