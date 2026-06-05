@@ -2,7 +2,9 @@ import SubscriptionDowngrade from "@/Components/subscriptions/SubscriptionDowngr
 import SubscriptionStatus from "@/Components/subscriptions/SubscriptionStatus";
 import SubscriptionUpgrade from "@/Components/subscriptions/SubscriptionUpgrade";
 import { Subscription } from "@/types/subscription";
-import { Head } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
+import { useEffect } from "react";
+import { toast, ToastContainer } from 'react-toastify'
 
 interface Props {
     subscription: Subscription;
@@ -18,11 +20,25 @@ const statusColors = {
 
 export default function Manage({ subscription }: Props) {
 
+    const { flash } = usePage().props as {
+        flash: { success?: string; error?: string };
+    };
+
     const title = 'Administra tu suscripción';
 
     const isYearly = subscription.plan === 'yearly';
     const price = subscription.price;
     const status_label = subscription.status_label;
+
+    useEffect(() => {
+        if (flash.success) {
+            toast.success(flash.success);
+        }
+
+        if (flash.error) {
+            toast.error(flash.error);
+        }
+    }, [flash])
 
     return (
         <>
@@ -56,6 +72,8 @@ export default function Manage({ subscription }: Props) {
                         }
                     </>
                 )}
+
+                <ToastContainer />
 
             </main>
 
