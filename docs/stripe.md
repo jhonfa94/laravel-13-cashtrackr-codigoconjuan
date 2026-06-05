@@ -41,3 +41,17 @@ $user->subscriptions()->create([
     'ends_at'        => null,
 ]);
 ```
+
+
+```php
+$user = App\Models\User::find(1);
+$user->subscriptions()->create([
+    'type'           => 'default',
+    'stripe_id'      => 'cus_UeNcgRQpdjpUZp',
+    'stripe_status'  => 'active',
+    'stripe_price'   => config('services.stripe.price_ai_monthly'),
+    'quantity'       => 1,
+    'trial_ends_at'  => null,
+    'ends_at'        => now()->addDays(30),
+]);
+```

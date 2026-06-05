@@ -1,5 +1,4 @@
-import { Head, usePage } from "@inertiajs/react";
-import { ToastContainer, toast } from "react-toastify";
+import { usePage } from "@inertiajs/react";
 import { Budget } from "@/types/budget";
 import AmountDisplay from "@/Components/AmountDisplay";
 import ExpenseModal from "@/Components/ExpenseModal";
@@ -12,6 +11,7 @@ import ExpenseDropdown from "@/Components/ExpenseDropdown";
 import DeleteExpenseModal from "@/Components/DeleteExpenseModal";
 import CashTrackrAgent from "@/Components/CashTrackrAgent";
 import PricingTable from "@/Components/PricingTable";
+import AppLayout from "@/Layouts/AppLayout";
 
 
 
@@ -26,16 +26,8 @@ export default function Show({ budget, categories, spent }: Props) {
 
     // console.log(budget.expenses)
 
-    const { flash, user } = usePage().props;
-    useEffect(() => {
-        if (flash.success) {
-            toast.success(flash.success);
-        }
+    const { user } = usePage().props;
 
-        if (flash.error) {
-            toast.error(flash.error);
-        }
-    }, [flash]);
 
     // console.log("user: ", user)
 
@@ -68,13 +60,11 @@ export default function Show({ budget, categories, spent }: Props) {
     }, [budget, categories])
 
 
-
-
-
+    const title = `Presupuesto: ${budget.name}`
 
     return (
-        <>
-            <Head title={`Presupuesto: ${budget.name}`} />
+        <AppLayout title={title}>
+
             <section className="sm:flex sm:items-center mt-10">
                 <div className="sm:flex-auto">
                     <h1 className="font-bold text-4xl">Presupuesto: {budget.name}</h1>
@@ -169,7 +159,7 @@ export default function Show({ budget, categories, spent }: Props) {
 
             <DeleteExpenseModal />
 
-            <ToastContainer
+            {/* <ToastContainer
                 position="top-right"
                 autoClose={5000}
                 hideProgressBar={false}
@@ -180,7 +170,7 @@ export default function Show({ budget, categories, spent }: Props) {
                 draggable
                 pauseOnHover
                 theme="dark"
-            />
-        </>
+            /> */}
+        </AppLayout>
     )
 }

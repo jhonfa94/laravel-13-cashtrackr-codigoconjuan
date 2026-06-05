@@ -45,7 +45,10 @@ class HandleInertiaRequests extends Middleware
                 'error' => fn() => $request->session()->get('error'),
             ],
             'user' => [
-                'user' => $user,
+                'user' => [
+                    'name' => $user->name,
+                    'email' => $user->email,
+                ],
                 'subscribed' => $subscribed,
                 'plan' => $subscribed
                     ? ($user->subscribedToPrice(config('services.stripe.price_ai_yearly'), 'default')

@@ -1,10 +1,11 @@
+import SubscriptionCancellation from "@/Components/subscriptions/SubscriptionCancellation";
 import SubscriptionDowngrade from "@/Components/subscriptions/SubscriptionDowngrade";
+import SubscriptionResume from "@/Components/subscriptions/SubscriptionResume";
 import SubscriptionStatus from "@/Components/subscriptions/SubscriptionStatus";
 import SubscriptionUpgrade from "@/Components/subscriptions/SubscriptionUpgrade";
+import AppLayout from "@/Layouts/AppLayout";
 import { Subscription } from "@/types/subscription";
-import { Head, usePage } from "@inertiajs/react";
-import { useEffect } from "react";
-import { toast, ToastContainer } from 'react-toastify'
+
 
 interface Props {
     subscription: Subscription;
@@ -20,9 +21,6 @@ const statusColors = {
 
 export default function Manage({ subscription }: Props) {
 
-    const { flash } = usePage().props as {
-        flash: { success?: string; error?: string };
-    };
 
     const title = 'Administra tu suscripción';
 
@@ -30,19 +28,10 @@ export default function Manage({ subscription }: Props) {
     const price = subscription.price;
     const status_label = subscription.status_label;
 
-    useEffect(() => {
-        if (flash.success) {
-            toast.success(flash.success);
-        }
 
-        if (flash.error) {
-            toast.error(flash.error);
-        }
-    }, [flash])
 
     return (
-        <>
-            <Head title={title} />
+        <AppLayout title={title}>
             <main className="max-w-3xl max-auto py-12 px-4">
                 <h1 className="text-3xl font-black mb-2">
                     {title}
@@ -60,7 +49,7 @@ export default function Manage({ subscription }: Props) {
                 />
 
                 {subscription.on_grace_period ? (
-                    <p>Suscripción cancelada</p>
+                    <SubscriptionResume ends_at={subscription.ends_at} />
                 ) : (
                     <>
                         {!isYearly && <SubscriptionUpgrade />}
@@ -69,14 +58,17 @@ export default function Manage({ subscription }: Props) {
                                 next_billing_date={subscription.next_billing_date}
                                 ends_at={subscription.ends_at}
                             />
-                        }
+                            }
+
+                            <SubscriptionCancellation
+                                next_billing_date={subscription.next_billing_date}
+
+                            />
                     </>
                 )}
 
-                <ToastContainer />
-
             </main>
 
-        </>
+        </AppLayout>
     )
 }

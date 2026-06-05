@@ -15,7 +15,7 @@ class Suscribed
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (! $request->user()?->subscribed('default')) {
+        if (!$request->user()?->subscribed()) {
             return redirect()->route('billing');
         }
         return $next($request);
