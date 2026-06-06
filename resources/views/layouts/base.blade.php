@@ -24,7 +24,9 @@
     <header class="bg-purple-950 py-5">
         <div class="mx-auto flex max-w-6xl flex-col items-center lg:flex-row lg:justify-between">
             <div class="max-w-100 w-full">
-                <img src="{{ asset("img/logo.svg") }}" alt="Logo" class="w-full">
+                <a href="{{ route('home') }}">
+                    <img src="{{ asset('img/logo.svg') }}" alt="Logo" class="w-full">
+                </a>
             </div>
 
 
