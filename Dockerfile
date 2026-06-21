@@ -26,9 +26,9 @@ RUN npm install \
     && npm run build
 
 # ==================================================
-# Instalar Octane con Swoole
+# Instalar Octane con FrankenPHP
 # ==================================================
-RUN php artisan octane:install --server=swoole --no-interaction
+RUN php artisan octane:install --server=frankenphp --no-interaction
 
 # ==================================================
 # Optimización Laravel
@@ -48,4 +48,4 @@ EXPOSE 8000
 # ==================================================
 # Arranque Octane
 # ==================================================
-CMD ["php", "artisan", "octane:start", "--server=swoole", "--host=0.0.0.0", "--port=8000"]
+CMD ["php", "artisan", "octane:start", "--server=frankenphp", "--host=0.0.0.0", "--port=8000"]
